@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposta NovaLex de Precedentes</title>
+<meta name="description" content="Proposta de formação executiva em precedentes vinculantes, relevância da questão de direito federal e inteligência artificial aplicada à advocacia.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Proposta NovaLex de Precedentes">
+<meta property="og:description" content="Proposta de formação executiva em precedentes vinculantes, relevância da questão de direito federal e inteligência artificial aplicada à advocacia.">
+<meta name="theme-color" content="#0C1211" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EDEEEA" media="(prefers-color-scheme: light)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  html{color-scheme:light dark}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<style>
+:root{
+  --bg:#EDEEEA; --surface:#FFFFFF; --sunk:#E1E4DD; --deep:#D6D9D2;
+  --ink:#151B1A; --ink-2:#4A5453; --ink-3:#77817E;
+  --line:#C7CEC7; --line-2:#ACB4AC;
+  --lex:#1B6B58; --closed:#9E3C27; --brass:#8A6A2F;
+  --display:"Fraunces",Georgia,serif;
+  --body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1211; --surface:#141D1C; --sunk:#101817; --deep:#080D0C;
+    --ink:#E9EEEA; --ink-2:#9CA9A5; --ink-3:#6F7B78;
+    --line:#26302F; --line-2:#37423F;
+    --lex:#7FD8BC; --closed:#E28468; --brass:#D2AC6A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1211; --surface:#141D1C; --sunk:#101817; --deep:#080D0C;
+  --ink:#E9EEEA; --ink-2:#9CA9A5; --ink-3:#6F7B78;
+  --line:#26302F; --line-2:#37423F;
+  --lex:#7FD8BC; --closed:#E28468; --brass:#D2AC6A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); line-height:1.55; -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0; text-wrap:balance} p{margin:0}
+
+/* ---------- deck chrome ---------- */
+.deck{position:relative; max-width:1280px; margin:0 auto; padding-inline:22px; padding-block:18px 0}
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+  padding-bottom:12px; border-bottom:1px solid var(--line)}
+.brand{font-family:var(--mono); font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+.brand b{color:var(--lex); font-weight:500}
+.topright{display:flex; gap:9px; align-items:center}
+.tb{font-family:var(--mono); font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+  background:transparent; border:1px solid var(--line); border-radius:2px; color:var(--ink-3);
+  padding:5px 9px; cursor:pointer}
+.tb:hover{color:var(--ink); border-color:var(--line-2)}
+
+.stage{position:relative; perspective:1500px; margin-top:18px;
+  height:clamp(500px,74vh,700px)}
+.slide{position:absolute; inset:0; opacity:0; pointer-events:none;
+  display:flex; flex-direction:column; justify-content:center;
+  transform:translateZ(-420px); transition:opacity .5s ease, transform .62s cubic-bezier(.22,.75,.2,1);
+  overflow-y:auto; padding-right:4px}
+.slide[data-on="1"]{opacity:1; transform:translateZ(0); pointer-events:auto}
+.slide[data-past="1"]{transform:translateZ(320px); opacity:0}
+
+.nav{display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding-block:13px; border-top:1px solid var(--line); margin-top:14px}
+.dots{flex:1 1 240px; display:flex; gap:4px; min-width:180px}
+.dot{flex:1; height:22px; border:0; background:transparent; padding:0; cursor:pointer; display:flex; align-items:flex-end}
+.dot i{display:block; width:100%; height:4px; background:var(--line-2); transition:height .2s ease, background .2s ease}
+.dot[aria-current="true"] i{height:18px; background:var(--lex)}
+.dot:hover i{height:11px; background:var(--ink-3)}
+.dot:focus-visible{outline:2px solid var(--lex); outline-offset:2px}
+.count{font-family:var(--mono); font-size:.7rem; color:var(--ink-3); font-variant-numeric:tabular-nums}
+
+/* ---------- LEX ---------- */
+.lexbar{display:grid; grid-template-columns:auto 1fr; gap:13px; align-items:center;
+  padding-block:12px 18px; border-top:1px solid var(--line)}
+.lexfig{width:42px; height:54px; display:block; flex:none}
+.scan{animation:sc 3.8s ease-in-out infinite}
+@keyframes sc{0%,100%{transform:translateY(0)}50%{transform:translateY(11px)}}
+.lexspeech{border-left:2px solid var(--lex); padding-left:12px}
+.lexname{font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--lex); display:block}
+.lexline{font-family:var(--mono); font-size:.78rem; line-height:1.5; color:var(--ink-2); margin-top:3px; max-width:82ch}
+.lexline b{color:var(--ink); font-weight:500}
+
+/* ---------- typografia de slide ---------- */
+.eyebrow{font-family:var(--mono); font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+.big{font-family:var(--display); font-weight:500; letter-spacing:-.022em; line-height:1.02;
+  font-size:clamp(2.1rem,5vw,3.6rem)}
+.big em{font-style:italic; font-weight:300; color:var(--lex)}
+.h2{font-family:var(--display); font-weight:500; letter-spacing:-.018em; line-height:1.08;
+  font-size:clamp(1.6rem,3.4vw,2.5rem)}
+.h2 em{font-style:italic; font-weight:300; color:var(--lex)}
+.lead{color:var(--ink-2); font-size:clamp(.95rem,1.35vw,1.08rem); max-width:66ch; margin-top:14px}
+.kicker{font-family:var(--display); font-style:italic; font-weight:300; color:var(--ink-2);
+  font-size:clamp(1.05rem,2vw,1.4rem); line-height:1.42; max-width:40ch}
+
+/* ---------- componentes ---------- */
+.cards{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); margin-top:26px}
+.card{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--line-2);
+  padding:15px 16px 17px; display:flex; flex-direction:column; gap:6px}
+.card.on{border-left-color:var(--lex)}
+.card.warn{border-left-color:var(--closed)}
+.card .k{font-family:var(--mono); font-size:.66rem; letter-spacing:.11em; color:var(--brass)}
+.card .t{font-weight:600; font-size:.99rem; line-height:1.22}
+.card .d{font-size:.85rem; line-height:1.5; color:var(--ink-2)}
+
+.quote{background:var(--sunk); border-left:3px solid var(--closed); padding:20px 24px; margin-top:24px}
+.quote .src{font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; color:var(--ink-3); display:block; margin-bottom:9px}
+.quote .q{font-family:var(--display); font-size:clamp(1.05rem,1.9vw,1.42rem); line-height:1.42; color:var(--ink)}
+
+.tab{width:100%; border-collapse:collapse; margin-top:22px; font-size:.88rem}
+.tab th{font-family:var(--mono); font-size:.64rem; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-3); text-align:left; font-weight:400; padding:0 10px 7px 0; border-bottom:1px solid var(--line)}
+.tab td{padding:9px 10px 9px 0; border-bottom:1px solid var(--line); color:var(--ink-2); vertical-align:top}
+.tab td.n{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.tab tr.us td{color:var(--lex); font-weight:600; border-bottom:1px solid var(--lex)}
+.tab tr.us td.n{font-weight:500}
+
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:26px; margin-top:26px}
+.stat .n{font-family:var(--display); font-weight:500; font-size:clamp(2.4rem,5.4vw,3.4rem); line-height:.95;
+  letter-spacing:-.03em; color:var(--brass); font-variant-numeric:tabular-nums}
+.stat .l{font-size:.9rem; line-height:1.45; color:var(--ink-2); margin-top:9px; max-width:32ch}
+.stat .s{font-family:var(--mono); font-size:.65rem; color:var(--ink-3); margin-top:7px}
+
+/* corredor compacto */
+.mini{position:relative; height:300px; perspective:1250px; perspective-origin:50% 18%;
+  margin-top:20px; background:var(--deep); border:1px solid var(--line); overflow:hidden}
+.mtrack{position:absolute; inset:0; transform-style:preserve-3d}
+.mgate{position:absolute; left:50%; top:34px; width:216px; margin-left:-108px;
+  background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--closed);
+  padding:8px 10px; transition:transform .3s ease}
+.mgate .mn{font-family:var(--mono); font-size:.58rem; letter-spacing:.1em; color:var(--ink-3)}
+.mgate .mt{font-weight:600; font-size:.78rem; line-height:1.2; margin-top:2px}
+.mgate .mk{font-family:var(--mono); font-size:.6rem; color:var(--closed); margin-top:4px; line-height:1.3}
+.mini .fogm{position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(to bottom,transparent 62%,var(--deep) 100%)}
+
+.asks{display:flex; flex-direction:column; gap:11px; margin-top:24px}
+.ask{display:grid; grid-template-columns:38px 1fr; gap:14px; align-items:start;
+  background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--lex); padding:13px 16px}
+.ask.warn{border-left-color:var(--closed)}
+.ask .num{font-family:var(--display); font-size:1.5rem; color:var(--lex); line-height:1}
+.ask.warn .num{color:var(--closed)}
+.ask .t{font-weight:600; font-size:.98rem}
+.ask .d{font-size:.86rem; color:var(--ink-2); line-height:1.48; margin-top:3px}
+
+.split{display:grid; grid-template-columns:1.15fr 1fr; gap:34px; align-items:start; margin-top:6px}
+.grid9{display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); margin-top:22px}
+.g9{background:var(--surface); padding:11px 13px 13px}
+.g9 .a{font-family:var(--mono); font-size:.62rem; letter-spacing:.09em; color:var(--lex)}
+.g9 .t{font-weight:600; font-size:.85rem; line-height:1.2; margin-top:3px}
+.g9 .d{font-family:var(--mono); font-size:.63rem; color:var(--ink-3); margin-top:4px; line-height:1.35}
+
+footer{border-top:1px solid var(--line); margin-top:6px; padding-block:20px 34px}
+footer p{font-family:var(--mono); font-size:.67rem; line-height:1.8; color:var(--ink-3); max-width:none}
+
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+@media (max-width:760px){
+  .stage{height:auto; perspective:none}
+  .slide{position:static; opacity:1; transform:none; pointer-events:auto; padding-bottom:38px;
+         border-bottom:1px solid var(--line); margin-bottom:26px}
+  .slide[data-past="1"]{opacity:1; transform:none}
+  .nav,.mini{display:none}
+  .split{grid-template-columns:1fr; gap:20px}
+}
+</style>
+
+<div class="deck">
+  <div class="topbar">
+    <span class="brand"><b>NovaLex</b> · Proposta de curso · Coordenação acadêmica</span>
+    <div class="topright">
+      <button class="tb" id="prev" type="button">◂</button>
+      <button class="tb" id="next" type="button">▸</button>
+      <button class="tb" id="themeBtn" type="button">tema</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <!-- 1 ─────────────────────────────────── capa -->
+    <section class="slide" data-lex="Sou o LEX. Vou acompanhar esta apresentação e dizer, em cada tela, o que está em jogo. Começo pelo essencial: <b>este curso não existe em lugar nenhum do país</b> — e a razão é uma data.">
+      <span class="eyebrow">Formação executiva · 40 horas-aula · nove encontros</span>
+      <h1 class="big" style="margin-top:18px; max-width:18ch">Precedentes Vinculantes, Relevância e <em>Inteligência Artificial</em></h1>
+      <div style="height:1px; background:var(--lex); width:220px; margin:26px 0 20px"></div>
+      <p class="kicker">O recurso especial não começa no prazo para recorrer. Começa na primeira linha da petição inicial.</p>
+    </section>
+
+    <!-- 2 ─────────────────────────────────── a janela -->
+    <section class="slide" data-lex="A Emenda Constitucional criou o requisito em 2022 e ele ficou quatro anos sem eficácia, esperando lei. A lei veio em agosto. O regimento, em 26 de agosto. <b>O regime vale há nove dias.</b>">
+      <span class="eyebrow">Por que agora</span>
+      <h2 class="h2" style="margin-top:12px">Uma janela que abriu há <em>nove dias</em></h2>
+      <div class="cards">
+        <div class="card"><span class="k">14.07.2022</span><div class="t">EC 125/2022</div>
+          <div class="d">Cria o requisito da relevância no art. 105, §2º, da Constituição — sem eficácia, à espera de lei regulamentadora.</div></div>
+        <div class="card on"><span class="k">04.08.2026</span><div class="t">Lei 15.484/2026</div>
+          <div class="d">Regulamenta o regime. Insere o art. 1.035-A no Código de Processo Civil e altera outros nove artigos.</div></div>
+        <div class="card on"><span class="k">26.08.2026</span><div class="t">Emenda Regimental STJ 55</div>
+          <div class="d">O Tribunal adapta o regimento interno: trinta e um artigos novos, do 255-A ao 255-AE.</div></div>
+        <div class="card on"><span class="k">03.09.2026</span><div class="t">Entrada em vigor</div>
+          <div class="d">O regime passa a valer. A jurisprudência do STJ sobre relevância começa a se formar agora, diante de nós.</div></div>
+      </div>
+      <p class="lead">Nenhuma escola de direito do país tem curso sobre este regime, porque ele tem cinco semanas de
+      vigência. A jurisprudência se formará ao longo de 2026 e 2027 — o que dá valor tanto ao lançamento imediato
+      quanto a uma assinatura de atualização permanente.</p>
+    </section>
+
+    <!-- 3 ─────────────────────────────────── o que a lei exige -->
+    <section class="slide" data-lex="Repare no que a lei fez: transformou a relevância em <b>requisito de forma</b>. Não basta o recurso ser relevante — é preciso haver um tópico dizendo por quê. Sem o tópico, o recurso morre pela forma.">
+      <span class="eyebrow">O novo requisito</span>
+      <h2 class="h2" style="margin-top:12px">O que a lei passou a exigir</h2>
+      <div class="split">
+        <div>
+          <div class="quote">
+            <span class="src">Código de Processo Civil · art. 1.035-A, §2º</span>
+            <p class="q">“O recorrente deverá demonstrar a existência da relevância da questão de direito federal
+            infraconstitucional para apreciação exclusiva pelo Superior Tribunal de Justiça, em tópico específico
+            e fundamentado.”</p>
+          </div>
+          <p class="lead" style="font-family:var(--mono); font-size:.8rem; color:var(--closed)">
+            §3º — Desatendida a forma prevista no §2º, o recurso será inadmitido.</p>
+        </div>
+        <div class="cards" style="grid-template-columns:1fr; margin-top:0">
+          <div class="card"><span class="k">Vetores</span><div class="d">Econômico, político, social ou jurídico — que ultrapassem os interesses subjetivos do processo.</div></div>
+          <div class="card"><span class="k">Quórum</span><div class="d">Só se nega a relevância por manifestação de dois terços dos membros do órgão julgador.</div></div>
+          <div class="card"><span class="k">Presunção</span><div class="d">Seis hipóteses no art. 105, §3º, da Constituição — mas o regimento do STJ exige demonstração ainda nelas.</div></div>
+          <div class="card"><span class="k">Transição</span><div class="d">Exigível contra acórdãos publicados a partir de 3 de setembro de 2026.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 ─────────────────────────────────── a armadilha -->
+    <section class="slide" data-lex="Esta é a tela que mais vale dinheiro. Todo mundo vai ler a Constituição, ver que a relevância é presumida em seis hipóteses, e concluir que nesses casos não precisa demonstrar nada. <b>O regimento diz o contrário</b> — e quem descobrir isso em sala já pagou o curso.">
+      <span class="eyebrow" style="color:var(--closed)">O achado que muda a aula</span>
+      <h2 class="h2" style="margin-top:12px">A presunção <em>não dispensa</em> a demonstração</h2>
+      <div class="quote">
+        <span class="src">Regimento Interno do STJ · art. 255-J, parágrafo único · Emenda Regimental 55/2026</span>
+        <p class="q">“O recorrente deverá demonstrar, <strong>inclusive nas hipóteses de presunção</strong>, a
+        relevância da questão de direito federal infraconstitucional, sob pena de inadmissão, pelo Tribunal de
+        Justiça ou Tribunal Regional Federal, ou não conhecimento pelo STJ.”</p>
+      </div>
+      <div class="cards">
+        <div class="card warn"><span class="k">Consequência 1</span><div class="t">A porta fecha na origem</div>
+          <div class="d">O recurso sem o tópico é inadmitido no tribunal de origem — pode nem chegar a Brasília, e pode ser barrado antes mesmo da distribuição.</div></div>
+        <div class="card warn"><span class="k">Consequência 2</span><div class="t">O AREsp não serve mais</div>
+          <div class="d">Contra a inadmissão fundada no regime de relevância cabe agravo interno, do art. 1.021. Errar a via consome o prazo.</div></div>
+        <div class="card warn"><span class="k">Consequência 3</span><div class="t">O valor da causa é conferido de ofício</div>
+          <div class="d">Pelo art. 255-K, §2º, o STJ pode rever o valor atribuído à causa e derrubar a presunção dos quinhentos salários mínimos.</div></div>
+      </div>
+    </section>
+
+    <!-- 5 ─────────────────────────────────── a tese -->
+    <section class="slide" data-lex="Aqui está o produto. Não vendemos “como recorrer melhor”. Vendemos a competência de <b>montar o processo, desde o primeiro dia, para que ele sobreviva ao filtro</b> — porque a prova que o tópico vai precisar não pode nascer no recurso.">
+      <span class="eyebrow">A tese do curso</span>
+      <h2 class="big" style="margin-top:20px; max-width:20ch">A relevância não se alega no fim. Ela se <em>constrói nos autos</em>, desde o início.</h2>
+      <div style="height:1px; background:var(--line-2); width:180px; margin:26px 0 18px"></div>
+      <p class="lead" style="max-width:72ch">Demonstrar multiplicidade exige dados. Demonstrar impacto setorial exige
+      parecer econômico. Demonstrar divergência exige os acórdãos paradigma juntados aos autos. Nada disso pode ser
+      produzido pela primeira vez no recurso especial — a instrução já terá se encerrado.</p>
+      <p class="lead" style="color:var(--ink); font-weight:600; max-width:72ch">É essa a competência que o curso vende.
+      E que ninguém está vendendo.</p>
+    </section>
+
+    <!-- 6 ─────────────────────────────────── o funil -->
+    <section class="slide" data-lex="Cada porta é uma aula, um instrumento e uma entrega. O aluno percorre as nove com o mesmo caso simulado, da escolha da via até a sustentação final. <b>Passe o mouse nas portas.</b>">
+      <span class="eyebrow">O objeto do curso</span>
+      <h2 class="h2" style="margin-top:12px">Nove portas que <em>não se reabrem</em></h2>
+      <div class="mini" id="mini"><div class="mtrack" id="mtrack"></div><div class="fogm"></div></div>
+      <p class="lead" style="font-size:.86rem">Da esquerda para a direita, do primeiro grau ao STJ. Cada cartão traz a
+      norma que fecha aquela porta. Existe uma peça interativa completa deste corredor, para uso em divulgação e na
+      abertura de aula.</p>
+    </section>
+
+    <!-- 7 ─────────────────────────────────── escala -->
+    <section class="slide" data-lex="Estes são os números com fonte. Note o que <b>não</b> está aqui: não existe estatística oficial de quantos processos morrem em cada porta. Seria fácil inventar um funil decrescente e ficaria bonito. Um curso que ensina a auditar citações de IA não começa fabricando as próprias.">
+      <span class="eyebrow">Escala do problema</span>
+      <h2 class="h2" style="margin-top:12px">O filtro já era severo antes da lei nova</h2>
+      <div class="stats">
+        <div class="stat"><div class="n">73,22%</div>
+          <p class="l">dos agravos em recurso especial não foram conhecidos pelo STJ.</p>
+          <p class="s">Assessoria de Admissibilidade do STJ · 2024</p></div>
+        <div class="stat"><div class="n">500.622</div>
+          <p class="l">processos recebidos pelo Superior Tribunal de Justiça em um único ano.</p>
+          <p class="s">STJ · 2025</p></div>
+        <div class="stat"><div class="n">2/3</div>
+          <p class="l">é o quórum para negar a relevância — mas basta maioria absoluta para decidir que a matéria não é da competência do Tribunal, com os mesmos efeitos.</p>
+          <p class="s">CF, art. 105, §2º · RISTJ, art. 255-M, §§1º e 2º</p></div>
+      </div>
+    </section>
+
+    <!-- 8 ─────────────────────────────────── mercado -->
+    <section class="slide" data-lex="Há cursos de precedentes. Há cursos de IA para advogados. <b>Não há curso que ensine a usar IA agêntica para operar precedentes</b> — e o eixo da relevância não existe em nenhuma oferta, porque a lei é de agosto.">
+      <span class="eyebrow">Benchmark verificado em setembro de 2026</span>
+      <h2 class="h2" style="margin-top:12px">Ninguém integra os dois eixos</h2>
+      <table class="tab">
+        <thead><tr><th>Instituição</th><th>Produto</th><th>Carga</th><th>Ticket</th><th>Por hora</th><th>Leitura</th></tr></thead>
+        <tbody>
+          <tr><td>IDP</td><td>LLM em Tribunais Superiores</td><td class="n">434 h</td><td class="n">R$ 33.161</td><td class="n">R$ 76</td><td>Só o eixo jurídico</td></tr>
+          <tr><td>IDP</td><td>Extensão em IA na Advocacia</td><td class="n">12 h</td><td class="n">R$ 8.000</td><td class="n">R$ 667</td><td>Só o eixo tecnológico</td></tr>
+          <tr><td>FGV Direito</td><td>IA + Proteção de Dados</td><td class="n">32 h</td><td class="n">R$ 4.359</td><td class="n">R$ 136</td><td>IA regulatória, não processual</td></tr>
+          <tr><td>StartSe</td><td>IA para Advogados</td><td class="n">4 h</td><td class="n">R$ 599</td><td class="n">R$ 150</td><td>Ferramenta, não competência</td></tr>
+          <tr><td>ESA/OAB</td><td>Diversos</td><td class="n">curtos</td><td class="n">R$ 75–347</td><td class="n">—</td><td>Entrada / volume</td></tr>
+          <tr class="us"><td>NovaLex</td><td>Precedentes, Relevância e IA</td><td class="n">40 h</td><td class="n">R$ 6,5–9,5 mil</td><td class="n">R$ 162–237</td><td>Os dois eixos em um só desenho</td></tr>
+        </tbody>
+      </table>
+      <p class="lead" style="font-size:.86rem">Curso curto sempre custa caro por hora. Comparar só com a extensão de
+      doze horas do IDP, a R$ 667 a hora, inflaria a conta. O comparável honesto é a FGV, a cerca de R$ 136 a hora —
+      e a faixa proposta é um prêmio defensável sobre ela.</p>
+    </section>
+
+    <!-- 9 ─────────────────────────────────── o curso -->
+    <section class="slide" data-lex="Cada encontro entrega um artefato que o aluno leva. A tecnologia não é um módulo isolado no fim: <b>ela atravessa o curso inteiro</b>, e o aluno sai com um arsenal que ele mesmo construiu e testou.">
+      <span class="eyebrow">Estrutura · 40 horas-aula · turma de 12 a 16, síncrona</span>
+      <h2 class="h2" style="margin-top:12px">Nove encontros, <em>um único projeto</em></h2>
+      <div class="grid9">
+        <div class="g9"><span class="a">AULA 1 · 4h</span><div class="t">Fundamentos e regimes de vinculação</div><div class="d">Ambiente de IA e protocolo de sigilo</div></div>
+        <div class="g9"><span class="a">AULA 2 · 5h</span><div class="t">Ratio, obiter e votos plurais</div><div class="d">Ficha de precedente com âncora de página</div></div>
+        <div class="g9"><span class="a">AULA 3 · 5h</span><div class="t">Aplicação, distinção e superação</div><div class="d">Agente adversarial que ataca a própria tese</div></div>
+        <div class="g9"><span class="a">AULA 4 · 5h</span><div class="t">Relevância — o novo filtro</div><div class="d">Matriz de relevância e tópico do art. 1.035-A</div></div>
+        <div class="g9"><span class="a">AULA 5 · 4h</span><div class="t">Estratégia desde a inicial</div><div class="d">Simulado de prequestionamento retroativo</div></div>
+        <div class="g9"><span class="a">AULA 6 · 4h</span><div class="t">Saneamento e prova</div><div class="d">Matriz fato–prova–precedente</div></div>
+        <div class="g9"><span class="a">AULA 7 · 4h</span><div class="t">Controle da fundamentação</div><div class="d">Auditor de decisão pelo art. 489, §1º</div></div>
+        <div class="g9"><span class="a">AULA 8 · 5h</span><div class="t">Laboratório de IA agêntica</div><div class="d">Agente sentinela: customizar e auditar</div></div>
+        <div class="g9"><span class="a">AULA 9 · 4h</span><div class="t">Projeto integrador</div><div class="d">Sessão simulada de relevância, duas bancas</div></div>
+      </div>
+      <p class="lead" style="font-size:.86rem">Quarenta por cento de aprofundamento conceitual e sessenta de aplicação
+      prática. Avaliação: participação 20%, entregas dos módulos 30%, projeto integrador 50% — com defesa oral, que é
+      o que resiste a um aluno que faça tudo com inteligência artificial.</p>
+    </section>
+
+    <!-- 10 ────────────────────────────────── integridade -->
+    <section class="slide" data-lex="Três agentes independentes auditaram este material de forma adversarial. Acharam vinte e quatro problemas, e todos foram corrigidos antes desta apresentação. <b>Nenhuma obra inventada</b> — e isso, num curso sobre não ser enganado por IA, é o próprio produto.">
+      <span class="eyebrow">Método</span>
+      <h2 class="h2" style="margin-top:12px">O curso ensina a não ser enganado por IA.<br>Começamos por nós.</h2>
+      <div class="split">
+        <p class="lead">Seis agentes de pesquisa trabalharam sobre relevância, admissibilidade, teoria dos precedentes,
+        direito comparado, IA agêntica e pedagogia. Todos sob a mesma regra: nenhuma referência entra sem conferência
+        em fonte oficial, e o que não se confirma fica marcado como não confirmado. Depois, três auditorias
+        independentes revisaram tudo.</p>
+        <div class="stats" style="grid-template-columns:1fr; gap:18px; margin-top:0">
+          <div class="stat"><div class="n">0</div><p class="l">obras ou casos inventados, em 25 referências de alto risco amostradas pela auditoria.</p></div>
+          <div class="stat"><div class="n">24</div><p class="l">problemas encontrados e corrigidos: 3 críticos, 11 importantes, 10 menores.</p></div>
+          <div class="stat"><div class="n">4</div><p class="l">premissas correntes desmentidas — entre elas o inexistente “critério dos cinco anos” espanhol.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 ────────────────────────────────── decisões -->
+    <section class="slide" data-lex="É o que precisamos de vocês. As três primeiras são decisões; a quarta é uma pendência que registramos em vez de supor — e que alguém precisa buscar no STJ antes da primeira turma.">
+      <span class="eyebrow">O que precisamos da coordenação</span>
+      <h2 class="h2" style="margin-top:12px">Três decisões e uma pendência</h2>
+      <div class="asks">
+        <div class="ask"><span class="num">1</span><div><div class="t">Corpo docente</div>
+          <div class="d">O plano está pronto com três perfis definidos: o processualista do caso transversal, o especialista em STJ e STF, e o especialista em IA agêntica. Faltam os nomes — e não os inventamos.</div></div></div>
+        <div class="ask"><span class="num">2</span><div><div class="t">Preço e formato</div>
+          <div class="d">A recomendação é R$ 6.500 a R$ 9.500 por 40 horas, turma de 12 a 16, síncrona. Falta decidir entre turma única e escada de produtos, e se haverá assinatura de atualização desde o lançamento.</div></div></div>
+        <div class="ask"><span class="num">3</span><div><div class="t">Data da primeira turma</div>
+          <div class="d">A janela é agora: a jurisprudência sobre relevância se forma em 2026 e 2027. Quanto antes, maior a vantagem de ser o primeiro — e maior o acervo próprio quando os concorrentes chegarem.</div></div></div>
+        <div class="ask warn"><span class="num">!</span><div><div class="t">Pendência de fonte</div>
+          <div class="d">Falta o ato regulamentar da Presidência do STJ a que se refere o art. 343-A do regimento interno. Não localizamos — e registramos como não confirmado, em vez de supor que exista.</div></div></div>
+      </div>
+    </section>
+
+    <!-- 12 ────────────────────────────────── fecho -->
+    <section class="slide" data-lex="Obrigado. Se quiserem, posso abrir agora qualquer uma das três peças interativas: o corredor das nove portas, o planetário do art. 927, ou o globo das catorze jurisdições.">
+      <span class="eyebrow">Proposta NovaLex · 2026</span>
+      <h2 class="big" style="margin-top:24px; max-width:26ch">“O recurso especial começa na primeira linha da petição inicial.
+      <em>A relevância se constrói nos autos, desde o início.</em>”</h2>
+      <div style="height:1px; background:var(--line-2); width:200px; margin:30px 0 18px"></div>
+      <p class="lead" style="font-family:var(--mono); font-size:.76rem; line-height:1.9">
+        Fontes primárias conferidas · Lei nº 15.484, de 4.8.2026 · CF, art. 105, §§2º e 3º<br>
+        Emenda Regimental STJ nº 55, de 21.8.2026 (DJe de 26.8.2026) · Emenda Regimental STJ nº 53, de 30.6.2026<br>
+        Nove encontros · 40 horas-aula · turma de 12 a 16</p>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <span class="count" id="count">01 / 12</span>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="lexbar">
+    <svg class="lexfig" viewBox="0 0 62 78" aria-hidden="true">
+      <g><line x1="9" y1="15" x2="53" y2="15" stroke="var(--lex)" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="9" cy="15" r="2.6" fill="none" stroke="var(--lex)" stroke-width="1.5"/>
+        <circle cx="53" cy="15" r="2.6" fill="none" stroke="var(--lex)" stroke-width="1.5"/></g>
+      <line x1="31" y1="15" x2="31" y2="25" stroke="var(--lex)" stroke-width="1.8"/>
+      <rect x="13" y="25" width="36" height="48" rx="8" fill="var(--surface)" stroke="var(--lex)" stroke-width="1.8"/>
+      <rect x="19" y="34" width="24" height="30" rx="4" fill="var(--lex)" opacity=".13"/>
+      <g class="scan"><rect x="19" y="36" width="24" height="2.6" rx="1.3" fill="var(--lex)"/></g>
+      <circle cx="31" cy="49" r="4.6" fill="none" stroke="var(--lex)" stroke-width="1.5"/>
+      <circle cx="31" cy="49" r="1.6" fill="var(--lex)"/>
+    </svg>
+    <div class="lexspeech">
+      <span class="lexname">LEX · agente de admissibilidade</span>
+      <p class="lexline" id="lexline"></p>
+    </div>
+  </div>
+</div>
+
+<footer><div class="deck" style="padding-block:0">
+  <p>Apresentação gerada a partir do material do projeto, com todas as citações normativas conferidas em fonte
+  oficial. Setas ◂ ▸ ou clique nos marcadores para navegar.</p>
+</div></footer>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dots=document.getElementById('dots'), lexline=document.getElementById('lexline'),
+      count=document.getElementById('count'), stage=document.getElementById('stage');
+let cur=0;
+
+slides.forEach((s,i)=>{
+  const b=document.createElement('button');
+  b.className='dot'; b.type='button'; b.setAttribute('aria-label','Tela '+(i+1));
+  b.innerHTML='<i></i>'; b.addEventListener('click',()=>go(i)); dots.appendChild(b);
+});
+const dotEls=[...dots.children];
+
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>{
+    s.dataset.on = j===cur ? '1':'0';
+    s.dataset.past = j<cur ? '1':'0';
+    s.setAttribute('aria-hidden', j===cur?'false':'true');
+  });
+  dotEls.forEach((d,j)=>d.setAttribute('aria-current', j===cur?'true':'false'));
+  lexline.innerHTML=slides[cur].dataset.lex||'';
+  count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  slides[cur].scrollTop=0;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' '].includes(e.key)){go(cur+1); e.preventDefault()}
+  if(['ArrowLeft','PageUp'].includes(e.key)){go(cur-1); e.preventDefault()}
+  if(e.key==='Home'){go(0)} if(e.key==='End'){go(slides.length-1)}
+});
+document.getElementById('themeBtn').onclick=()=>{
+  const r=document.documentElement;
+  const dark=r.getAttribute('data-theme')==='dark' ||
+    (!r.getAttribute('data-theme') && matchMedia('(prefers-color-scheme:dark)').matches);
+  r.setAttribute('data-theme',dark?'light':'dark');
+};
+
+/* corredor compacto da tela 6 */
+const MG=[["Fase 0","Escolha da via","Súmula 203/STJ"],["Fase 1","Inicial e contestação","citar o artigo não prequestiona"],
+ ["Fase 2","Saneamento","art. 357, §1º — 5 dias"],["Fase 3","Instrução","prova indeferida preclui"],
+ ["Fase 4","Sentença","Súmula 7/STJ"],["Fase 5","Apelação","Súmula 283/STF"],
+ ["Fase 6","Embargos no tribunal","Súmula 211/STJ"],["Fase 7","Admissibilidade na origem","inadmitido antes de Brasília"],
+ ["Fase 8","Relevância no STJ","2/3 negam"]];
+const mini=document.getElementById('mtrack');
+MG.forEach((g,i)=>{
+  const d=document.createElement('div');
+  d.className='mgate';
+  d.style.transform=`translateZ(${-i*78}px) translateY(${i*22}px) translateX(${(i-4)*9}px)`;
+  d.style.opacity=Math.max(.3,1-i*.08);
+  d.style.zIndex=30-i;
+  d.innerHTML=`<div class="mn">${g[0]}</div><div class="mt">${g[1]}</div><div class="mk">✕ ${g[2]}</div>`;
+  d.addEventListener('mouseenter',()=>{d.style.transform=`translateZ(${-i*78+44}px) translateY(${i*22}px) translateX(${(i-4)*9}px)`; d.style.opacity=1});
+  d.addEventListener('mouseleave',()=>{d.style.transform=`translateZ(${-i*78}px) translateY(${i*22}px) translateX(${(i-4)*9}px)`; d.style.opacity=Math.max(.26,1-i*.085)});
+  mini.insertBefore(d, mini.firstChild);
+});
+
+
+go(0);
+</script>
+</body>
+</html>
