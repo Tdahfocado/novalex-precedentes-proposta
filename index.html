@@ -48,7 +48,10 @@
   --lex:#7FD8BC; --closed:#E28468; --brass:#D2AC6A;
 }
 *{box-sizing:border-box}
-body{background:var(--bg); color:var(--ink); font-family:var(--body); line-height:1.55; -webkit-font-smoothing:antialiased}
+html{-webkit-text-size-adjust:100%; text-size-adjust:100%}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); line-height:1.55;
+     -webkit-font-smoothing:antialiased; overflow-x:hidden}
+img,svg{max-width:100%}
 h1,h2,h3{margin:0; text-wrap:balance} p{margin:0}
 
 /* ---------- deck chrome ---------- */
@@ -92,6 +95,7 @@ h1,h2,h3{margin:0; text-wrap:balance} p{margin:0}
 .lexname{font-family:var(--mono); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--lex); display:block}
 .lexline{font-family:var(--mono); font-size:.78rem; line-height:1.5; color:var(--ink-2); margin-top:3px; max-width:82ch}
 .lexline b{color:var(--ink); font-weight:500}
+.lex-mob{display:none}
 
 /* ---------- typografia de slide ---------- */
 .eyebrow{font-family:var(--mono); font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
@@ -119,7 +123,8 @@ h1,h2,h3{margin:0; text-wrap:balance} p{margin:0}
 .quote .src{font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; color:var(--ink-3); display:block; margin-bottom:9px}
 .quote .q{font-family:var(--display); font-size:clamp(1.05rem,1.9vw,1.42rem); line-height:1.42; color:var(--ink)}
 
-.tab{width:100%; border-collapse:collapse; margin-top:22px; font-size:.88rem}
+.tab-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:22px}
+.tab{width:100%; min-width:640px; border-collapse:collapse; font-size:.88rem}
 .tab th{font-family:var(--mono); font-size:.64rem; letter-spacing:.11em; text-transform:uppercase;
   color:var(--ink-3); text-align:left; font-weight:400; padding:0 10px 7px 0; border-bottom:1px solid var(--line)}
 .tab td{padding:9px 10px 9px 0; border-bottom:1px solid var(--line); color:var(--ink-2); vertical-align:top}
@@ -168,13 +173,42 @@ footer p{font-family:var(--mono); font-size:.67rem; line-height:1.8; color:var(-
 
 @media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
 @media (max-width:760px){
-  .stage{height:auto; perspective:none}
-  .slide{position:static; opacity:1; transform:none; pointer-events:auto; padding-bottom:38px;
+  .deck{padding-inline:18px}
+  .stage{height:auto; perspective:none; margin-top:14px}
+  .slide{position:static; opacity:1; transform:none; pointer-events:auto;
+         display:block; overflow:visible; padding:0 0 30px;
          border-bottom:1px solid var(--line); margin-bottom:26px}
   .slide[data-past="1"]{opacity:1; transform:none}
-  .nav,.mini{display:none}
-  .split{grid-template-columns:1fr; gap:20px}
+  .slide:last-of-type{border-bottom:0}
+  .nav, .mini, .lexbar, #prev, #next{display:none}
+  .split{grid-template-columns:1fr; gap:18px}
+  .cards, .stats, .grid9, .axes{grid-template-columns:1fr}
+  .stats{gap:20px}
+  .big{font-size:clamp(1.8rem,8.4vw,2.4rem)}
+  .h2{font-size:clamp(1.35rem,6.4vw,1.8rem)}
+  .quote{padding:15px 16px}
+  .quote .q{font-size:1.02rem}
+  .ask{grid-template-columns:28px 1fr; gap:10px; padding:12px 13px}
+  .ask .num{font-size:1.25rem}
+  .tab{min-width:560px; font-size:.82rem}
+  .topbar{padding-bottom:10px}
+  .brand{font-size:.62rem; letter-spacing:.1em; line-height:1.5}
+  /* LEX comenta dentro de cada tela, já que a barra fixa some */
+  .lex-mob{display:block; border-left:2px solid var(--lex); padding-left:12px; margin-top:18px}
+  .lex-mob b{color:var(--ink); font-weight:500}
+  .lex-mob .n{font-family:var(--mono); font-size:.58rem; letter-spacing:.16em;
+              text-transform:uppercase; color:var(--lex); display:block; margin-bottom:3px}
+  .lex-mob .t{font-family:var(--mono); font-size:.76rem; line-height:1.5; color:var(--ink-2)}
+  /* substituto do corredor 3D, que não funciona em toque */
+  .mini-mob{display:block; margin-top:18px; border:1px solid var(--line); background:var(--surface)}
+  .mm{display:grid; grid-template-columns:52px 1fr; gap:10px; padding:10px 12px;
+      border-bottom:1px solid var(--line)}
+  .mm:last-child{border-bottom:0}
+  .mm .f{font-family:var(--mono); font-size:.6rem; color:var(--ink-3); padding-top:2px}
+  .mm .t{font-weight:600; font-size:.84rem; line-height:1.2}
+  .mm .k{font-family:var(--mono); font-size:.64rem; color:var(--closed); margin-top:2px}
 }
+@media (min-width:761px){ .mini-mob{display:none} }
 </style>
 
 <div class="deck">
@@ -277,6 +311,7 @@ footer p{font-family:var(--mono); font-size:.67rem; line-height:1.8; color:var(-
       <span class="eyebrow">O objeto do curso</span>
       <h2 class="h2" style="margin-top:12px">Nove portas que <em>não se reabrem</em></h2>
       <div class="mini" id="mini"><div class="mtrack" id="mtrack"></div><div class="fogm"></div></div>
+      <div class="mini-mob" id="miniMob"></div>
       <p class="lead" style="font-size:.86rem">Da esquerda para a direita, do primeiro grau ao STJ. Cada cartão traz a
       norma que fecha aquela porta. Existe uma peça interativa completa deste corredor, para uso em divulgação e na
       abertura de aula.</p>
@@ -303,7 +338,7 @@ footer p{font-family:var(--mono); font-size:.67rem; line-height:1.8; color:var(-
     <section class="slide" data-lex="Há cursos de precedentes. Há cursos de IA para advogados. <b>Não há curso que ensine a usar IA agêntica para operar precedentes</b> — e o eixo da relevância não existe em nenhuma oferta, porque a lei é de agosto.">
       <span class="eyebrow">Benchmark verificado em setembro de 2026</span>
       <h2 class="h2" style="margin-top:12px">Ninguém integra os dois eixos</h2>
-      <table class="tab">
+      <div class="tab-wrap"><table class="tab">
         <thead><tr><th>Instituição</th><th>Produto</th><th>Carga</th><th>Ticket</th><th>Por hora</th><th>Leitura</th></tr></thead>
         <tbody>
           <tr><td>IDP</td><td>LLM em Tribunais Superiores</td><td class="n">434 h</td><td class="n">R$ 33.161</td><td class="n">R$ 76</td><td>Só o eixo jurídico</td></tr>
@@ -313,7 +348,7 @@ footer p{font-family:var(--mono); font-size:.67rem; line-height:1.8; color:var(-
           <tr><td>ESA/OAB</td><td>Diversos</td><td class="n">curtos</td><td class="n">R$ 75–347</td><td class="n">—</td><td>Entrada / volume</td></tr>
           <tr class="us"><td>NovaLex</td><td>Precedentes, Relevância e IA</td><td class="n">40 h</td><td class="n">R$ 6,5–9,5 mil</td><td class="n">R$ 162–237</td><td>Os dois eixos em um só desenho</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p class="lead" style="font-size:.86rem">Curso curto sempre custa caro por hora. Comparar só com a extensão de
       doze horas do IDP, a R$ 667 a hora, inflaria a conta. O comparável honesto é a FGV, a cerca de R$ 136 a hora —
       e a faixa proposta é um prêmio defensável sobre ela.</p>
@@ -471,6 +506,21 @@ MG.forEach((g,i)=>{
   d.addEventListener('mouseenter',()=>{d.style.transform=`translateZ(${-i*78+44}px) translateY(${i*22}px) translateX(${(i-4)*9}px)`; d.style.opacity=1});
   d.addEventListener('mouseleave',()=>{d.style.transform=`translateZ(${-i*78}px) translateY(${i*22}px) translateX(${(i-4)*9}px)`; d.style.opacity=Math.max(.26,1-i*.085)});
   mini.insertBefore(d, mini.firstChild);
+});
+
+/* versão em lista para telefone: o corredor 3D depende de mouse */
+document.getElementById('miniMob').innerHTML = MG.map(g =>
+  `<div class="mm"><div class="f">${g[0]}</div>`
+  + `<div><div class="t">${g[1]}</div><div class="k">✕ ${g[2]}</div></div></div>`).join('');
+
+/* a fala do LEX passa a viver dentro de cada tela, para o celular */
+slides.forEach(s => {
+  if (!s.dataset.lex) return;
+  const d = document.createElement('div');
+  d.className = 'lex-mob';
+  d.innerHTML = '<span class="n">LEX · agente de admissibilidade</span>'
+              + '<p class="t">' + s.dataset.lex + '</p>';
+  s.appendChild(d);
 });
 
 
